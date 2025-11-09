@@ -1,0 +1,23 @@
+{
+  "name": "nodejs-crud-api",
+  "version": "1.0.0",
+  "description": "this is a crud api study project",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:dev": "nodemon src/server.js",
+    "start:prod": "node src/server.js"
+  },
+  "engines": {
+    "node": ">=24.10.0",
+    "npm": ">=10.9.2"
+  },
+  "keywords": [
+    "nodejs",
+    "api",
+    "crud"
+  ],
+  "author": "asdqdsa",
+  "license": "ISC",
+  "packageManager": "pnpm@10.20.0"
+}
