@@ -21,7 +21,7 @@ const server = http.createServer(
     if (!users) {
       sendJSON({
         res,
-        data: { message: 'User not Found' },
+        data: { message: 'Endpoint not Found' },
         status: STATUS_CODES.NOT_FOUND,
       });
     }
