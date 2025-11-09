@@ -1,6 +1,8 @@
 import http, { IncomingMessage, ServerResponse } from 'node:http';
 import { handleUsers } from './routes/user.ts';
 import { config } from './utils/config.ts';
+import { sendJSON } from './utils/sendJSON.ts';
+import { STATUS_CODES } from './utils/constants.ts';
 
 console.log('Booting...');
 
@@ -17,8 +19,11 @@ const server = http.createServer(
     });
 
     if (!users) {
-      res.writeHead(404, { 'Content-Type': 'text/plain' });
-      res.end(JSON.stringify({ message: 'Not Found' }));
+      sendJSON({
+        res,
+        data: { message: 'User not Found' },
+        status: STATUS_CODES.NOT_FOUND,
+      });
     }
   }
 );
