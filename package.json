@@ -5,10 +5,11 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start:dev": "nodemon src/server.ts",
-    "start:prod": "node src/server.ts",
+    "start:dev": "cross-env NODE_ENV=development nodemon src/server.ts --loader ts-node/esm src/server.ts",
+    "start:prod": "cross-env NODE_ENV=production node src/server.ts",
     "dev": "cross-env NODE_ENV=development nodemon src/server.ts --loader ts-node/esm src/server.ts",
-    "prod": "cross-env NODE_ENV=production node src/server.ts"
+    "prod": "cross-env NODE_ENV=production node src/server.ts",
+    "lint": "eslint ."
   },
   "engines": {
     "node": ">=24.10.0",
