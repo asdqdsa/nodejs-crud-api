@@ -1,0 +1,43 @@
+{
+  "name": "nodejs-crud-api",
+  "version": "1.0.0",
+  "description": "this is a crud api study project",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:dev": "cross-env NODE_ENV=development nodemon src/server.ts --loader ts-node/esm src/server.ts",
+    "start:prod": "cross-env NODE_ENV=production node src/server.ts",
+    "lint": "eslint .",
+    "format": "prettier --write \"src/**/*.{ts,js,json,md}\""
+  },
+  "engines": {
+    "node": ">=24.10.0",
+    "npm": ">=10.9.2"
+  },
+  "keywords": [
+    "nodejs",
+    "api",
+    "crud"
+  ],
+  "author": "asdqdsa",
+  "license": "ISC",
+  "packageManager": "pnpm@10.20.0",
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "uuid": "^13.0.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "@types/node": "^24.10.0",
+    "cross-env": "^10.1.0",
+    "eslint": "^9.39.1",
+    "globals": "^16.5.0",
+    "jiti": "^2.6.1",
+    "nodemon": "^3.1.10",
+    "prettier": "^3.6.2",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.46.3"
+  }
+}
