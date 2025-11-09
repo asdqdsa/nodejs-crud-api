@@ -41,3 +41,8 @@ dist-ssr
 
 !.evn.example
 !.evn.*.example
+
+# Lock files
+pnpm-lock.yaml
+yarn.lock
+package-lock.json
