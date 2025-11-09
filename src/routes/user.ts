@@ -1,7 +1,7 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { usersData, type User } from '../memory/db.ts';
 import { ENDPOINTS, METHODS, STATUS_CODES } from '../utils/constants.ts';
-import { getUserById, parseUserId } from './utils.ts';
+import { getUserById, isValidUuid, parseUserId } from './utils.ts';
 import { sendJSON } from '../utils/sendJSON.ts';
 import { randomUUID } from 'node:crypto';
 
@@ -65,6 +65,17 @@ export async function handleDelete({
 
   const userId = parseUserId(pathname);
 
+  const isValidId = isValidUuid(userId);
+
+  if (!isValidId) {
+    sendJSON({
+      res,
+      data: { message: 'Invalid User ID' },
+      status: STATUS_CODES.BAD_REQUEST,
+    });
+    return true;
+  }
+
   const user = getUserById(userId);
 
   if (!user) {
@@ -106,8 +117,19 @@ export async function handlePut({
   req: IncomingMessage;
   endpoint: string;
 }) {
-  if (pathname.startsWith(endpoint)) {
+  if (pathname.startsWith(endpoint + '/')) {
     const userId = parseUserId(pathname);
+    const isValidId = isValidUuid(userId);
+
+    if (!isValidId) {
+      sendJSON({
+        res,
+        data: { message: 'Invalid User ID' },
+        status: STATUS_CODES.BAD_REQUEST,
+      });
+      return true;
+    }
+
     const user = getUserById(userId);
 
     if (!user) {
@@ -170,28 +192,37 @@ export function handleGet({
     return true;
   }
 
-  if (pathname.startsWith(endpoint + '/')) {
-    const userId = parseUserId(pathname);
-    const user = getUserById(userId);
+  if (!pathname.startsWith(endpoint + '/')) return false;
 
-    if (!user) {
-      sendJSON({
-        res,
-        data: { message: 'User not Found' },
-        status: STATUS_CODES.NOT_FOUND,
-      });
-      return true;
-    }
+  const userId = parseUserId(pathname);
+  const isValidId = isValidUuid(userId);
 
+  if (!isValidId) {
     sendJSON({
       res,
-      data: user,
-      status: STATUS_CODES.OK,
+      data: { message: 'Invalid User ID' },
+      status: STATUS_CODES.BAD_REQUEST,
     });
     return true;
   }
 
-  return false;
+  const user = getUserById(userId);
+
+  if (!user) {
+    sendJSON({
+      res,
+      data: { message: 'User not Found' },
+      status: STATUS_CODES.NOT_FOUND,
+    });
+    return true;
+  }
+
+  sendJSON({
+    res,
+    data: user,
+    status: STATUS_CODES.OK,
+  });
+  return true;
 }
 
 export function handlePost({
@@ -215,9 +246,9 @@ export function handlePost({
     req.on('end', () => {
       try {
         const parsed = JSON.parse(body);
-        const { name, age, info } = parsed;
+        const { username, age, hobbies } = parsed;
 
-        const required = [name, age, info].every(
+        const required = [username, age, hobbies].every(
           (value) => value !== undefined
         );
 
@@ -232,9 +263,9 @@ export function handlePost({
 
         const newUser: User = {
           id: randomUUID(),
-          name,
+          username,
           age,
-          info,
+          hobbies,
         };
 
         usersData.push(newUser);

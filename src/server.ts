@@ -9,7 +9,7 @@ console.log('Booting...');
 console.log(`PORT: ${config.port}`);
 
 const server = http.createServer(
-  (req: IncomingMessage, res: ServerResponse) => {
+  async (req: IncomingMessage, res: ServerResponse) => {
     const url = new URL(req.url || '', `http://${req.headers.host}`);
 
     const users = handleUsers({

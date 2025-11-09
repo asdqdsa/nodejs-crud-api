@@ -1,21 +1,23 @@
+import { randomUUID } from 'node:crypto';
+
 export type User = {
   id: string;
-  name: string;
+  username: string;
   age: number;
-  info: string;
+  hobbies: string[];
 };
 
 export const usersData: User[] = [
   {
-    id: '1',
-    name: 'John Doe',
+    id: randomUUID(),
+    username: 'John Doe',
     age: 30,
-    info: 'Crime and Justice Department',
+    hobbies: ['Crime and Justice Department'],
   },
   {
-    id: '2',
-    name: 'Jane Doe',
+    id: randomUUID(),
+    username: 'Jane Doe',
     age: 25,
-    info: 'State Department of Education',
+    hobbies: ['State Department of Education'],
   },
 ];
