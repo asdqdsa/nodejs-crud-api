@@ -1,28 +1,20 @@
 import http, { IncomingMessage, ServerResponse } from 'node:http'
-import dotenv from 'dotenv'
+import { config } from './utils/config.ts'
 
 console.log('Booting...')
 
-dotenv.config({
-  path:
-    process.env.NODE_ENV === 'production'
-      ? process.cwd() + '/.env.production'
-      : process.cwd() + '/.env.development',
-})
-
-const PORT = process.env.PORT || 4111
-
-console.log(`PORT: ${PORT}`)
+console.log(`PORT: ${config.port}`)
 
 const server = http.createServer((_: IncomingMessage, res: ServerResponse) => {
   res.writeHead(200, { 'Content-Type': 'application/json' })
   res.end(
     JSON.stringify({
       data: 'Henlo ',
+      msg: 'OK',
     })
   )
 })
 
-server.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`)
+server.listen(config.port, () => {
+  console.log(`Server is running on port ${config.port}`)
 })
