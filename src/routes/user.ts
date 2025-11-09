@@ -30,9 +30,74 @@ export function handleUsers({
         endpoint: ENDPOINTS.users,
       });
 
+    case METHODS.PUT:
+      return handlePut({
+        pathname: url.pathname,
+        res,
+        req,
+        endpoint: ENDPOINTS.users,
+      });
+
     default:
       return false;
   }
+}
+
+export async function handlePut({
+  pathname,
+  res,
+  req,
+  endpoint,
+}: {
+  pathname: string;
+  res: ServerResponse;
+  req: IncomingMessage;
+  endpoint: string;
+}) {
+  if (pathname.startsWith(endpoint)) {
+    const userId = parseUserId(pathname);
+    const user = getUserById(userId);
+
+    if (!user) {
+      return sendJSON({
+        res,
+        data: { message: 'User not Found' },
+        status: STATUS_CODES.NOT_FOUND,
+      });
+    }
+
+    try {
+      const body = await waitBody({ req });
+      Object.assign(user, body);
+      return sendJSON({
+        res,
+        data: user,
+        status: STATUS_CODES.OK,
+      });
+    } catch {
+      return sendJSON({
+        res,
+        data: { message: 'Invalid JSON' },
+        status: STATUS_CODES.BAD_REQUEST,
+      });
+    }
+  }
+}
+
+export async function waitBody({ req }: { req: IncomingMessage }) {
+  let body = '';
+  return await new Promise((resolve, reject) => {
+    req.on('data', (chunk) => (body += chunk));
+    req.on('end', () => {
+      try {
+        resolve(JSON.parse(body));
+      } catch {
+        reject(new Error('Invalid JSON'));
+      }
+    });
+
+    req.on('error', () => reject());
+  });
 }
 
 export function handleGet({
