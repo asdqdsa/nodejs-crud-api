@@ -3,8 +3,16 @@ import dotenv from 'dotenv'
 
 console.log('Booting...')
 
-dotenv.config()
+dotenv.config({
+  path:
+    process.env.NODE_ENV === 'production'
+      ? process.cwd() + '/.env.production'
+      : process.cwd() + '/.env.development',
+})
+
 const PORT = process.env.PORT || 4111
+
+console.log(`PORT: ${PORT}`)
 
 const server = http.createServer((_: IncomingMessage, res: ServerResponse) => {
   res.writeHead(200, { 'Content-Type': 'application/json' })
