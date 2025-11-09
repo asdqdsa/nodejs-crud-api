@@ -15,7 +15,7 @@ export function handleUsers({
   if (req.method === 'GET' && url.pathname === ENDPOINTS.users) {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify(usersData));
-    return;
+    return true;
   }
 
   if (req.method == 'GET' && url.pathname.startsWith(ENDPOINTS.users)) {
@@ -24,7 +24,7 @@ export function handleUsers({
 
     if (!user) {
       res.writeHead(404, { 'Content-Type': 'text/plain' });
-      res.end(JSON.stringify({ message: 'User Found' }));
+      res.end(JSON.stringify({ message: 'User not Found' }));
       return true;
     }
 
