@@ -38,9 +38,61 @@ export function handleUsers({
         endpoint: ENDPOINTS.users,
       });
 
+    case METHODS.DELETE:
+      return handleDelete({
+        pathname: url.pathname,
+        res,
+        req,
+        endpoint: ENDPOINTS.users,
+      });
+
     default:
       return false;
   }
+}
+
+export async function handleDelete({
+  pathname,
+  res,
+  endpoint,
+}: {
+  pathname: string;
+  res: ServerResponse;
+  req: IncomingMessage;
+  endpoint: string;
+}) {
+  if (!pathname.startsWith(endpoint + '/')) return false;
+
+  const userId = parseUserId(pathname);
+
+  const user = getUserById(userId);
+
+  if (!user) {
+    return sendJSON({
+      res,
+      data: { message: 'User not Found' },
+      status: STATUS_CODES.NOT_FOUND,
+    });
+  }
+
+  removeInPlace({ id: user.id, entries: usersData });
+
+  res.writeHead(STATUS_CODES.NO_CONTENT);
+  res.end();
+
+  return true;
+}
+
+export function removeInPlace({
+  id,
+  entries,
+}: {
+  id: string;
+  entries: User[];
+}) {
+  const idx = entries.findIndex((ent) => ent.id === id);
+  if (idx !== -1) entries.splice(idx, 1);
+  return;
 }
 
 export async function handlePut({
